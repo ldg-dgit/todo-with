@@ -22,13 +22,36 @@ import { useForm } from "react-hook-form";
   );
 } */
 
-function TodoList() {
-  const { register } = useForm();
+interface IFormData {
+  todo: string;
+  errors: {
+    todo: {
+      message: string;
+    };
+  };
+}
 
+function TodoList() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormData>({
+    defaultValues: {
+      todo: "Here!",
+    },
+  });
+  const onValid = (data: any) => {
+    console.log(data);
+  };
   return (
     <div>
-      <form>
-        <input {...register("todo")} placeholder='Write a to do' />
+      <form style={{ display: "flex", flexDirection: "column" }} onSubmit={handleSubmit(onValid)}>
+        <span>{errors?.todo?.message}</span>
+        <input
+          {...register("todo", { required: "todo is required" })}
+          placeholder='Write a to do'
+        />
         <button>Add</button>
       </form>
     </div>
