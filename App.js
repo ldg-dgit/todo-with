@@ -14,7 +14,7 @@ export default function App() {
     if (text === "") {
       return;
     }
-    const newTodos = Object.assign({}, todos, { [Date.now()]: { text, work: working } });
+    const newTodos = { ...todos, [Date.now()]: { text, work: working } };
     setTodos(newTodos);
     setText("");
   };
