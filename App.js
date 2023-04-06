@@ -1,8 +1,17 @@
 import { StatusBar } from "expo-status-bar";
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { theme } from "./colors";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Feather } from "@expo/vector-icons";
 
 const STORAGE_KEY = "@todos";
 
@@ -10,6 +19,9 @@ export default function App() {
   const [working, setWorking] = useState(true);
   const [text, setText] = useState("");
   const [todos, setTodos] = useState({});
+  useEffect(() => {
+    loadTodos();
+  }, []);
   const travel = () => setWorking(false);
   const work = () => setWorking(true);
   const onChangeText = (payload) => setText(payload);
@@ -20,9 +32,6 @@ export default function App() {
     const s = await AsyncStorage.getItem(STORAGE_KEY);
     s !== null ? setTodos(JSON.parse(s)) : null;
   };
-  useEffect(() => {
-    loadTodos();
-  }, []);
   const addTodo = async () => {
     if (text === "") {
       return;
@@ -31,6 +40,21 @@ export default function App() {
     setTodos(newTodos);
     await saveTodos(newTodos);
     setText("");
+  };
+  const deleteTodo = async (key) => {
+    Alert.alert("Delete todo", "Are you sure?", [
+      { text: "Cancel" },
+      {
+        text: "I'm sure",
+        style: "destructive",
+        onPress: async () => {
+          const newTodos = { ...todos };
+          delete newTodos[key];
+          setTodos(newTodos);
+          await saveTodos(newTodos);
+        },
+      },
+    ]);
   };
   return (
     <View style={styles.container}>
@@ -48,7 +72,9 @@ export default function App() {
           value={text}
           onSubmitEditing={addTodo}
           style={styles.input}
-          placeholder={working ? "Add a To do" : "Where do you want to go?"}
+          placeholder={
+            working ? "What are you going to do to work?" : "What are you going to do to chill?"
+          }
           onChangeText={onChangeText}
           returnKeyType='done'
         />
@@ -58,6 +84,9 @@ export default function App() {
           todos[key].working === working ? (
             <View style={styles.todo} key={key}>
               <Text style={styles.todoText}>{todos[key].text}</Text>
+              <TouchableOpacity onPress={() => deleteTodo(key)}>
+                <Feather name='x' size={24} color={theme.lightGray} />
+              </TouchableOpacity>
             </View>
           ) : null
         )}
@@ -96,6 +125,9 @@ const styles = StyleSheet.create({
     paddingVertical: 17.5,
     paddingHorizontal: 15,
     borderRadius: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   todoText: {
     color: "white",
