@@ -4,7 +4,7 @@
     "slug": "todo-with",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/blank_with_icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -13,16 +13,23 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dgit.todowith"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.dgit.todowith"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/blank_with_icon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e107307c-b3e2-48c0-abef-6a0fd9c6ab71"
+      }
     }
   }
 }
